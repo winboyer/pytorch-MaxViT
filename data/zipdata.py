@@ -34,6 +34,7 @@ class ZipData(data.Dataset):
                 cls_idx = [l for l in line.split('\t') if l]
                 if not cls_idx:
                     continue
+                print(cls_idx)
                 assert len(cls_idx) >= 2, "invalid line: {}".format(line)
                 idx = int(cls_idx[1])
                 cls = cls_idx[0]

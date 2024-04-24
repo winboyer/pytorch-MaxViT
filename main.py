@@ -14,7 +14,7 @@ import torch.distributed as dist
 
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from timm.utils import accuracy, AverageMeter
-
+from apex import amp
 from config import get_config
 from classification import build_model
 from data import build_loader
@@ -23,11 +23,13 @@ from optimizer import build_optimizer
 from logger import create_logger
 from utils import load_checkpoint, save_checkpoint, get_grad_norm, auto_resume_helper, reduce_tensor
 
-try:
+#try:
     # noinspection PyUnresolvedReferences
-    from apex import amp
-except ImportError:
-    amp = None
+ #   from apex import amp
+#except ImportError:
+ #   amp = None
+
+#device = torch.device ('cuda:0')
 
 
 def parse_option():
@@ -84,6 +86,8 @@ def main(config):
 
     optimizer = build_optimizer(config, model)
     if config.AMP_OPT_LEVEL != "O0":
+        #model, optimizer = torch.cuda.amp.autocast(model, optimizer)
+        #model, optimizer = torch.cuda.amp.autocast(model, optimizer, opt_level=config.AMP_OPT_LEVEL)
         model, optimizer = amp.initialize(model, optimizer, opt_level=config.AMP_OPT_LEVEL)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[config.LOCAL_RANK], broadcast_buffers=False)
     model_without_ddp = model.module
@@ -302,7 +306,8 @@ if __name__ == '__main__':
     print(config.MODEL.TYPE)
 
     if config.AMP_OPT_LEVEL != "O0":
-        assert amp is not None, "amp not installed!"
+        #assert amp is not None, "amp not installed!"
+        print("00")
 
     if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
         rank = int(os.environ["RANK"])

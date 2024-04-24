@@ -12,6 +12,7 @@ import torch
 import torch.nn as nn
 
 from timm.models.efficientnet_blocks import SqueezeExcite, DepthwiseSeparableConv
+# from timm.models._efficientnet_blocks import SqueezeExcite, DepthwiseSeparableConv
 from timm.models.layers import drop_path, trunc_normal_, Mlp, DropPath
 
 
